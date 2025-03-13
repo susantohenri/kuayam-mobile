@@ -15,6 +15,7 @@ import {
 import { Progress } from '~/components/ui/progress';
 import { Text } from '~/components/ui/text';
 import { Tooltip, TooltipContent, TooltipTrigger } from '~/components/ui/tooltip';
+import LogoutButton from '~/components/LogoutButton';
 
 const GITHUB_AVATAR_URI =
   'https://i.pinimg.com/originals/ef/a2/8d/efa28d18a04e7fa40ed49eeb0ab660db.jpg';
@@ -88,6 +89,7 @@ export default function Screen() {
           >
             <Text>Update</Text>
           </Button>
+          <LogoutButton />
         </CardFooter>
       </Card>
     </View>
