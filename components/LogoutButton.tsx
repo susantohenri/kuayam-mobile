@@ -1,16 +1,12 @@
-import { logout } from "~/functions/auth.function";
 import { Button } from "./ui/button";
 import { Text } from "./ui/text";
-import { router } from "expo-router";
+import { useContext } from "react";
+import { AuthContext } from "~/contexts/auth.context";
 
 export default function LogoutButton() {
-    const doLogout = async () => {
-        await logout();
-        router.navigate(`/login`)
-    }
-
+    const { logout } = useContext(AuthContext);
     return (
-        <Button onPress={() => doLogout()}>
+        <Button onPress={() => logout()}>
             <Text>Loogut</Text>
         </Button>
     )

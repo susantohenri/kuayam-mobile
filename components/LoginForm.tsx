@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -6,12 +6,12 @@ import { Button } from "~/components/ui/button";
 import { Alert, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "~/components/ui/text";
-import { login } from "~/functions/auth.function";
-import { router } from "expo-router";
+import { AuthContext } from "~/contexts/auth.context";
 
-export default function Login() {
+export default function LoginForm() {
     const [email, setEmail] = useState(``)
     const [password, setPassword] = useState(``)
+    const { login } = useContext(AuthContext);
 
     const doLogin = async () => {
         const { message } = await login(email, password);
@@ -24,7 +24,7 @@ export default function Login() {
                     style: 'cancel'
                 }]
             );
-        } else router.navigate('/');
+        }
     }
 
     return (

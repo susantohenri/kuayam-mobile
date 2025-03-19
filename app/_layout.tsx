@@ -1,7 +1,7 @@
 import '~/global.css';
 
 import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native';
-import { router, Slot, Stack, useSegments } from 'expo-router';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { Platform } from 'react-native';
@@ -10,7 +10,8 @@ import { useColorScheme } from '~/lib/useColorScheme';
 import { PortalHost } from '@rn-primitives/portal';
 import { ThemeToggle } from '~/components/ThemeToggle';
 import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
-import { getUser } from '~/functions/auth.function';
+import { AuthContext } from '~/contexts/auth.context';
+import LoginForm from '~/components/LoginForm';
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -30,19 +31,7 @@ export default function RootLayout() {
   const hasMounted = React.useRef(false);
   const { colorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
-
-  const [segments] = useSegments();
-
-  React.useEffect(() => {
-    const getCurrentUser = async () => {
-      const isLoggedIn = null !== await getUser();
-      const isLoginPage = `login` === segments;
-
-      if (isLoggedIn && isLoginPage) router.navigate(`/`);
-      if (!isLoggedIn) router.navigate(`/login`);
-    }
-    getCurrentUser();
-  }, [segments])
+  const { user } = React.useContext(AuthContext);
 
   useIsomorphicLayoutEffect(() => {
     if (hasMounted.current) {
@@ -65,7 +54,15 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
       <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-      <Slot />
+      {user ? <Stack>
+        <Stack.Screen
+          name='index'
+          options={{
+            title: '',
+            headerRight: () => <ThemeToggle />,
+          }}
+        />
+      </Stack> : <LoginForm />}
       <PortalHost />
     </ThemeProvider>
   );
