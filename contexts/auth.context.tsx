@@ -32,7 +32,7 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
             .then(async (data) => {
                 const { message, access_token, refresh_token } = data;
                 if (access_token) {
-                    const userData = { ...jwtDecode(access_token), refresh_token };
+                    const userData = { ...jwtDecode(access_token), access_token, refresh_token };
                     await SecureStore.setItemAsync(`user`, JSON.stringify(userData));
                     setUser(userData);
                 }
