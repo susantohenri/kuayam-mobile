@@ -10,6 +10,8 @@ import { useColorScheme } from '~/lib/useColorScheme';
 import { PortalHost } from '@rn-primitives/portal';
 import { ThemeToggle } from '~/components/ThemeToggle';
 import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
+import { ApiContext } from '~/contexts/api.context';
+import LoginForm from '~/components/LoginForm';
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -29,6 +31,7 @@ export default function RootLayout() {
   const hasMounted = React.useRef(false);
   const { colorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
+  const { isLoggedIn } = React.useContext(ApiContext);
 
   useIsomorphicLayoutEffect(() => {
     if (hasMounted.current) {
@@ -51,15 +54,30 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
       <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-      <Stack>
-        <Stack.Screen
-          name='index'
-          options={{
-            title: 'Starter Base',
-            headerRight: () => <ThemeToggle />,
-          }}
-        />
-      </Stack>
+      {!isLoggedIn ? <LoginForm /> :
+        <Stack>
+          <Stack.Screen
+            name='index'
+            options={{
+              title: isLoggedIn ? `Menu` : `Login`,
+              headerRight: () => <ThemeToggle />,
+            }}
+          />
+          <Stack.Screen
+            name='superadmins/index'
+            options={{
+              title: `Super Admin List`,
+              headerRight: () => <ThemeToggle />,
+            }}
+          />
+          <Stack.Screen
+            name='superadmins/form'
+            options={{
+              title: `Form Super Admin`,
+              headerRight: () => <ThemeToggle />,
+            }}
+          />
+        </Stack>}
       <PortalHost />
     </ThemeProvider>
   );
